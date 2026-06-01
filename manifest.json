@@ -1,0 +1,8 @@
+{
+  "name": "Playlist Undo",
+  "description": "Undo for playlist edits. Logs every track you remove from your playlists and lets you restore it — the safety net Spotify never had.",
+  "preview": "preview.png",
+  "main": "playlist-undo.js",
+  "readme": "README.md",
+  "tags": ["playlist", "utility", "undo", "restore", "quality of life"]
+}
