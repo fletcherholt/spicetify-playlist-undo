@@ -1,0 +1,31 @@
+name: Purge jsDelivr cache
+
+# The Spicetify Marketplace loads installed extensions from jsDelivr
+# (cdn.jsdelivr.net/gh/<owner>/<repo>@main/<file>), which caches the @main
+# ref for up to ~12h. Purging on push makes updates reach users in minutes:
+# they run the latest code on their next Spotify restart — no reinstall needed.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Purge JS + manifest on jsDelivr
+        run: |
+          files=$(git ls-files '*.js' '*.mjs' 'manifest.json')
+          echo "Purging: $files"
+          for f in $files; do
+            url="https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/${f}"
+            echo "-> $url"
+            curl -fsS "$url" | head -c 300 || echo "(purge request failed for $f)"
+            echo
+          done
